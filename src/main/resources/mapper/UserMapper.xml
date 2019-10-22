@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzkj.sales.dao.UserDao" >
+  <resultMap id="BaseResultMap" type="com.zzkj.sales.entity.User" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <association property="shop" column="shop_id" javaType="com.zzkj.sales.entity.Shop">
+      <id column="shop_id" property="shopId"/>
+      <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+      <result column="shop_addr" property="shopAddr" jdbcType="VARCHAR" />
+      <result column="shop_phone" property="shopPhone" jdbcType="VARCHAR" />
+      <result column="shop_img" property="shopImg" jdbcType="VARCHAR" />
+      <result column="desc" property="desc" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, user_name, password, name, phone, idcard, shop_id, status, role, remark, 
+    create_time, uuid
+  </sql>
+  <sql id="User_And_Shop" >
+     user_id, user_name, password, name, phone, idcard, status, role, remark,
+    create_time, uuid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByUserName" resultMap="BaseResultMap" >
+    select
+    <include refid="User_And_Shop" />,su.shop_id,ss.shop_id,ss.shop_name, ss.shop_addr, ss.shop_phone, ss.shop_img, ss.desc
+    from sys_user su
+    LEFT JOIN sys_shop ss on su.shop_id = ss.shop_id
+    where user_name = #{userName,jdbcType=INTEGER} and su.status = #{status,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByShopId" resultMap="BaseResultMap">
+    select
+    <include refid="User_And_Shop" />,su.shop_id,ss.shop_id,ss.shop_name, ss.shop_addr, ss.shop_phone, ss.shop_img, ss.desc
+    from sys_user su
+    LEFT JOIN sys_shop ss on su.shop_id = ss.shop_id
+    where su.shop_id = #{shopId,jdbcType=INTEGER} and su.status = #{status,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zzkj.sales.entity.User" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id">
+    insert into sys_user ( user_name, password,
+      name, phone, idcard, 
+      shop_id, status, role, 
+      remark, create_time,uuid)
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{shopId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{role,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{uuid,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzkj.sales.entity.User" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id" >
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createTime != null" >
+        uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{uuid,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzkj.sales.entity.User" >
+    update sys_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByUsernameSelective" parameterType="com.zzkj.sales.entity.User" >
+    update sys_user
+    <set >
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_name = #{userName,jdbcType=INTEGER}
+  </update>
+
+  <update id="deleteByUserId" parameterType="com.zzkj.sales.entity.User" >
+    update sys_user
+    set status = #{status,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zzkj.sales.entity.User" >
+    update sys_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      role = #{role,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectUuid" resultType="java.lang.String">
+    select md5(uuid())
+  </select>
+</mapper>

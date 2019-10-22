@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzkj.sales.dao.ShopDao" >
+  <resultMap id="BaseResultMap" type="com.zzkj.sales.entity.Shop" >
+    <id column="shop_id" property="shopId" jdbcType="INTEGER" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="shop_addr" property="shopAddr" jdbcType="VARCHAR" />
+    <result column="shop_phone" property="shopPhone" jdbcType="VARCHAR" />
+    <result column="shop_img" property="shopImg" jdbcType="VARCHAR" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    shop_id, shop_name, shop_addr, shop_phone, shop_img, desc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_shop
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </select>
+
+  <!-- 查询数据个数 -->
+  <select id="selectByCount" resultType="java.lang.Integer">
+    select count(1) from sys_shop
+  </select>
+
+  <!-- 分页查询 -->
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select shop_id, shop_name, shop_img from sys_shop limit #{pageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_shop
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zzkj.sales.entity.Shop" useGeneratedKeys="true" keyProperty="shopId" keyColumn="shop_id">
+    insert into sys_shop (shop_name, shop_addr,
+      shop_phone, shop_img, desc
+      )
+    values (#{shopName,jdbcType=VARCHAR}, #{shopAddr,jdbcType=VARCHAR},
+      #{shopPhone,jdbcType=VARCHAR}, #{shopImg,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzkj.sales.entity.Shop" useGeneratedKeys="true" keyProperty="shopId" keyColumn="shop_id" >
+    insert into sys_shop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="shopName != null" >
+        shop_name,
+      </if>
+      <if test="shopAddr != null" >
+        shop_addr,
+      </if>
+      <if test="shopPhone != null" >
+        shop_phone,
+      </if>
+      <if test="shopImg != null" >
+        shop_img,
+      </if>
+      <if test="desc != null" >
+        desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shopId != null" >
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="shopName != null" >
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopAddr != null" >
+        #{shopAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPhone != null" >
+        #{shopPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="shopImg != null" >
+        #{shopImg,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        #{desc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzkj.sales.entity.Shop" >
+    update sys_shop
+    <set >
+      <if test="shopName != null" >
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopAddr != null" >
+        shop_addr = #{shopAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPhone != null" >
+        shop_phone = #{shopPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="shopImg != null" >
+        shop_img = #{shopImg,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        desc = #{desc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzkj.sales.entity.Shop" >
+    update sys_shop
+    set shop_name = #{shopName,jdbcType=VARCHAR},
+      shop_addr = #{shopAddr,jdbcType=VARCHAR},
+      shop_phone = #{shopPhone,jdbcType=VARCHAR},
+      shop_img = #{shopImg,jdbcType=VARCHAR},
+      desc = #{desc,jdbcType=VARCHAR}
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </update>
+</mapper>
