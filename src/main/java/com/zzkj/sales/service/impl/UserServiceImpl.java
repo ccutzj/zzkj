@@ -1,9 +1,11 @@
 package com.zzkj.sales.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.zzkj.sales.dao.UserDao;
 import com.zzkj.sales.entity.User;
 import com.zzkj.sales.exception.ParamException;
 import com.zzkj.sales.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,17 +17,23 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 //    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private UserDao userDao;
+
     @Override
+    @DS("slave_1")
     public User queryByUsername(String userName) {
         if (userName != null){
             int status = 1;
-            User user = userDao.selectByUserName(userName, status);
+            User user = null;
+            log.info("userdao是:"+userDao);
+            user = userDao.selectByUserName(userName, status);
+            log.info("user是否为空:" + user);
             if (user != null){
                 return user;
             }

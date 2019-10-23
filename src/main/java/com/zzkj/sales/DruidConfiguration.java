@@ -16,7 +16,7 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class DruidConfiguration {
         @Bean
         public ServletRegistrationBean statViewServlet() {

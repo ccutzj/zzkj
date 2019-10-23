@@ -32,7 +32,7 @@ public class LoginController {
     public JsonData login(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) String json){
         log.info(json);
 
-        if(json == null){
+        if(json == null || json.trim().equals("")){
             throw new ParamException("未接收到请求参数");
         }
         //解析客户端发来的username+password的json
